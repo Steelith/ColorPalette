@@ -18,9 +18,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ColorActivity extends AppCompatActivity {
+public class ColorActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 
-    public static final String COLOR_NAME_TAG = ColorActivity.class.getSimpleName();
+    //public static final String COLOR_NAME_TAG = ColorActivity.class.getSimpleName();
+    public static final String RED = "red";
+    public static final String GREEN = "green";
+    public static final String BLUE = "blue";
 
     @BindView(R.id.redSeekBar)
     SeekBar redSeekBar;
@@ -43,7 +46,7 @@ public class ColorActivity extends AppCompatActivity {
 
     Random random = new Random();
 
-    @Override
+    /*@Override
     protected void onDestroy() {
         super.onDestroy();
         Log.d(COLOR_NAME_TAG, "onDestroy");
@@ -71,7 +74,7 @@ public class ColorActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         Log.d(COLOR_NAME_TAG, "onPause");
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +84,11 @@ public class ColorActivity extends AppCompatActivity {
         actionBar = getSupportActionBar();
         actionBar.setDefaultDisplayHomeAsUpEnabled(true);
 
-        Log.d(COLOR_NAME_TAG, "onCreate");
+        redSeekBar.setOnSeekBarChangeListener(this);
+        greenSeekBar.setOnSeekBarChangeListener(this);
+        blueSeekBar.setOnSeekBarChangeListener(this);
+
+        //Log.d(COLOR_NAME_TAG, "onCreate");
     }
 
     @Override
@@ -96,21 +103,65 @@ public class ColorActivity extends AppCompatActivity {
     @OnClick(R.id.generateButton)
     public void generate() {
 
-        Log.d(COLOR_NAME_TAG, "generateButton clicked");
-        /*red = random.nextInt(256);
+        //Log.d(COLOR_NAME_TAG, "generateButton clicked");
+        red = random.nextInt(256);
         green = random.nextInt(256);
         blue = random.nextInt(256);
 
+        redSeekBar.setProgress(red);
+        greenSeekBar.setProgress(green);
+        blueSeekBar.setProgress(blue);
+
+        updateBackgroundColor();
+    }
+
+    private void updateBackgroundColor() {
         int color = Color.rgb(red, green, blue);
         colorLinearLayout.setBackgroundColor(color);
-        */
     }
 
     @OnClick(R.id.saveButton)
     public void save() {
-        Log.d(COLOR_NAME_TAG, "saveButton clicked");
+        //Log.d(COLOR_NAME_TAG, "saveButton clicked");
     }
 
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        switch (seekBar.getId()) {
+            case R.id.redSeekBar:
+                red = progress;
+                break;
+            case R.id.greenSeekBar:
+                green = progress;
+                break;
+            case R.id.blueSeekBar:
+                blue = progress;
+                break;
+        }
+        updateBackgroundColor();
+    }
 
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+    }
 
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(RED, red);
+        outState.putInt(GREEN, green);
+        outState.putInt(BLUE, blue);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        red = savedInstanceState.getInt(RED);
+        green = savedInstanceState.getInt(GREEN);
+        blue = savedInstanceState.getInt(BLUE);
+    }
 }
