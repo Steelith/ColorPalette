@@ -1,5 +1,6 @@
 package kisielarobert.com.colorpalette;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -24,6 +25,7 @@ public class ColorActivity extends AppCompatActivity implements SeekBar.OnSeekBa
     public static final String RED = "red";
     public static final String GREEN = "green";
     public static final String BLUE = "blue";
+    public static final String COLOR_IN_HEX = "color in hex";
 
     @BindView(R.id.redSeekBar)
     SeekBar redSeekBar;
@@ -123,6 +125,10 @@ public class ColorActivity extends AppCompatActivity implements SeekBar.OnSeekBa
     @OnClick(R.id.saveButton)
     public void save() {
         //Log.d(COLOR_NAME_TAG, "saveButton clicked");
+        Intent data = new Intent();
+        data.putExtra(COLOR_IN_HEX, String.format("#%02X%02X%02X", red, green, blue));
+        setResult(RESULT_OK, data);
+        finish();
     }
 
     @Override
